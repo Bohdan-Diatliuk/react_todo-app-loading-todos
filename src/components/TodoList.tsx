@@ -1,26 +1,26 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import { Todo } from '../types/Todo';
-import { TodoInfo } from './TodoInfo';
 
 interface TodoListProps {
   todos: Todo[];
-  onToggle: (id: number) => void;
-  onDelete: (id: number) => void;
 }
 
-export const TodoList: React.FC<TodoListProps> = ({
-  todos,
-  onToggle,
-  onDelete,
-}) => (
+export const TodoList: React.FC<TodoListProps> = ({ todos }) => (
   <section className="todoapp__main" data-cy="TodoList">
     {todos.map(todo => (
-      <TodoInfo
-        key={todo.id}
-        todo={todo}
-        onToggle={() => onToggle(todo.id)}
-        onDelete={() => onDelete(todo.id)}
-      />
+      <div key={todo.id} className="todo" data-cy="Todo">
+        <label className="todo__status-label">
+          <input
+            type="checkbox"
+            className="todo__status"
+            checked={todo.completed}
+            readOnly
+          />
+        </label>
+
+        <span className="todo__title">{todo.title}</span>
+      </div>
     ))}
   </section>
 );
