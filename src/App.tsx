@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react';
 import { UserWarning } from './UserWarning';
 import { USER_ID, getTodos } from './api/todos';
@@ -8,22 +7,18 @@ import { Filter } from './components/Filter';
 import { TodoList } from './components/TodoList';
 import { FilterStatus } from './types/filterStatus';
 
-export const App: React.FC = () => {
-  if (!USER_ID) {
-    return <UserWarning />;
-  }
+const allFilters = {
+  [FilterStatus.All]: () => true,
+  [FilterStatus.Active]: (td: Todo) => !td.completed,
+  [FilterStatus.Completed]: (td: Todo) => td.completed,
+};
 
+export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [currentFilter, setCurrentFilter] = useState<FilterStatus>(
     FilterStatus.All,
   );
   const [errorMessage, setErrorMessage] = useState('');
-
-  const allFilters = {
-    [FilterStatus.All]: () => true,
-    [FilterStatus.Active]: (td: Todo) => !td.completed,
-    [FilterStatus.Completed]: (td: Todo) => td.completed,
-  };
 
   useEffect(() => {
     setErrorMessage('');
@@ -35,6 +30,10 @@ export const App: React.FC = () => {
         setTimeout(() => setErrorMessage(''), 3000);
       });
   }, []);
+
+  if (!USER_ID) {
+    return <UserWarning />;
+  }
 
   const filteredTodos = todos.filter(allFilters[currentFilter]);
   const incompletedTodos = todos.filter(td => !td.completed);
